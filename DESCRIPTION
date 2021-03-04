@@ -1,15 +1,29 @@
 Package: coRPysprofiling
-Title: What the Package Does (One Line, Title Case)
+Title: R Package for EDA and EDV on text
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+    c(person(given = "Anita",
+             family = "Li",
+             role = c("aut", "cre"),
+             email = "first.last@example.com"),
+      person(given = "Elanor",
+             family = "Boyle-Stanley",
+             role = c("aut", "cre"),
+             email = "first.last@example.com"),
+      person(given = "Junghoo",
+             family = "Kim",
+             role = c("aut", "cre"),
+             email = "first.last@example.com"),
+      person(given = "Ivy",
+             family = "Zhang",
+             role = c("aut", "cre"),
+             email = "ivyzhang1017@hotmail.com"))
+Description: coRPysprofiling is an open-source library designed to bring exploratory 
+    data analysis and visualization to the domain of natural language processing. 
+    Functions in the package will be used to provide some elementary statistics and 
+    visualizations for a single text corpus or provide functions to compare multiple 
+    corpora with each other.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
