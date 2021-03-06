@@ -15,12 +15,23 @@ corpus_viz <- function(corpus, display=TRUE) {
 
 }
 
+#' Returns a numeric vector of the distance between the two corpora
+#'
+#' @param corpus1 character vector
+#' @param corpus2 character vector
+#' @param metric character vector, optional (default : "cosine_similarity")
+#'
+#' @return numeric vector
+#' @export
+#'
+#' @examples
+#' corpora_compare("kitten meows", "ice cream is yummy")
 corpora_compare <- function(corpus1, corpus2, metric="cosine_similarity") {
 
 }
 
-#' Returns a tibble of distances from the reference document for each corpus in a vector of corpora. 
-#' This tibble is sorted in the order of increasing distance. 
+#' Returns a tibble of distances from the reference document for each corpus in a vector of corpora.
+#' This tibble is sorted in the order of increasing distance.
 #'
 #' @param refDoc character vector
 #' @param corpora character vector
