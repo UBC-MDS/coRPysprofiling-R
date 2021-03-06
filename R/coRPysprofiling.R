@@ -1,6 +1,15 @@
+#' Generate basic statistic for words from the input corpus
+#'
+#' @param corpus a string representing a corpus
+#'
+#' @return tibble
+#'
+#' @examples
+#' corpus_analysis("How many animals in Russia?")
 corpus_analysis <- function(corpus) {
 
 }
+
 
 #' Generate visualizations for words from the input corpus
 #'
