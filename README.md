@@ -44,7 +44,16 @@ Some specific functions include:
 
 ## Relevance to the R Ecosystem
 
-  - TODO
+To our knowledge, while `wordcloud` library generates wordcloud
+visualization for a given corpus, there is no general-purpose library
+for exploratory analysis and visualization of a text corpus in the R
+ecosystem. There are several advanced libraries for comparing
+similarities between different corpora: most notably, `quanteda`
+provides similarity comparison between large corpora using word
+embeddings. We believe that coRPysprofiling will provide some useful
+functionality for exploratory analysis and visualization and help bridge
+the gap between elementary text analysis to more sophisticated
+approaches utilizing word embeddings.
 
 ## Dependencies
 
