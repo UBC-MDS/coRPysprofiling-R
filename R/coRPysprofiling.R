@@ -1,3 +1,6 @@
+library(word2vec)
+library(here)
+
 #' Generate basic statistic for words from the input corpus
 #'
 #' @param corpus a string representing a corpus
@@ -30,13 +33,29 @@ corpus_viz <- function(corpus, display=TRUE) {
 #' @param corpus2 character vector
 #' @param metric character vector, optional (default : "cosine_similarity")
 #'
-#' @return numeric vector
+#' @return double vector
 #' @export
 #'
 #' @examples
 #' corpora_compare("kitten meows", "ice cream is yummy")
 corpora_compare <- function(corpus1, corpus2, metric="cosine_similarity") {
+  # Assumes pretrained model has been downloaded by user
+  path <- here("cb_ns_500_10.w2v")
+  model <- read.word2vec(file = path, normalize = TRUE)
+  emb1 <- doc2vec(model, corpus1, type = "embedding")
+  emb2 <- doc2vec(model, corpus2, type = "embedding")
 
+  if (metric == "cosine_similarity"){
+    score <- 1 - (
+      emb1 %*% t(emb2) / sqrt(sum(emb1^2)*sum(emb2^2))
+    )
+  }
+
+  if (metric == "euclidean"){
+    score <- sqrt(sum((emb1-emb2)^2))
+  }
+
+  abs(as.numeric(score))
 }
 
 #' Returns a tibble of distances from the reference document for each corpus in a vector of corpora.
