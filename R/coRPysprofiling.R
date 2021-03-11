@@ -1,5 +1,39 @@
 library(tokenizers)
 library(stopwords)
+library(googledrive)
+library(purrr)
+library(here)
+library(word2vec)
+
+
+load_pretrained <- function(dir = "data", model_name = "pretrained.w2v") {
+  path <- here::here(dir, model_name)
+
+  # Adapted from https://community.rstudio.com/t/how-to-download-a-google-drives-contents-based-on-drive-id-or-url/16896/13
+  # credits to Jenny Bryan
+  
+  ## store the URL you have
+  folder_url <- "https://drive.google.com/file/d/0B1shHLc2QTzzTVZESDFpQk5jNG8"
+
+  ## identify this folder on Drive
+  ## let googledrive know this is a file ID or URL, as opposed to file name
+  pretrained <- drive_get(as_id(folder_url))
+
+  ## download the model if file at the given path does not already exist
+  # TODO: have a robust way of checking that the model is correct (and not empty,for example)
+  if (file.exists(path)) {
+    paste0("Downloaded model found. Loading downloaded model...")
+  }
+  else {
+    paste0("Downloading pretrained model for sentence embedding. This may take up to 10 minutes...")
+    drive_download(pretrained, path=path, overwrite = TRUE)
+    paste0("Download Complete!")
+    
+  }
+  model <- read.word2vec(file = path, normalize = TRUE)
+  model
+}
+
 
 #' Tokenize words, and remove stopwords from corpus
 #'
