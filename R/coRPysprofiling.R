@@ -123,7 +123,7 @@ corpus_viz <- function(corpus, display=TRUE) {
 #' @examples
 #' corpora_compare("kitten meows", "ice cream is yummy")
 corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", model_name = "cb_ns_500_10.w2v") {
-  if (!is.character(c(corpus1, corpus2)) || length(corpus1) != 1 || length(corpus2) != 1) {
+  if (!is.character(corpus1) || !is.character(corpus2) || length(corpus1) != 1 || length(corpus2) != 1) {
     stop("inputs must be character vectors of length one")
   }
 
@@ -136,7 +136,7 @@ corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", mode
              "sg_hs_500_10.w2v",
              "sg_ns_500_10.w2v")
 
-  if (!(model_name %in% names)) {
+  if (!(model_name %in% names) || length(model_name) != 1) {
     stop(paste0(c("model_name should be one of: ",
                   paste0(names, collapse=', '))))
   }
