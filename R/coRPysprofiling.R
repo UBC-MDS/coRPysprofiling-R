@@ -73,8 +73,7 @@ wc <- ggplot2::ggplot(
     df, ggplot2::aes(label = word, size = Freq, color = Freq,
                     angle =  sample(c(0, 90), size = nrow(df), prob = rep(c(3/5, 2/5)), replace = TRUE))) +
     ggwordcloud::geom_text_wordcloud_area(
-        area_corr_power = 1.75, rm_outside=TRUE, 
-        shape = 'pentagon') +
+        area_corr_power = 1.75, rm_outside=TRUE, shape = 'pentagon') +
     ggplot2::scale_size_area(max_size = 15) +
     ggplot2::theme_minimal() +
     ggplot2::scale_alpha()
