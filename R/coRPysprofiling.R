@@ -1,5 +1,23 @@
+
 library(word2vec)
 library(here)
+library(tokenizers)
+library(stopwords)
+
+#' Tokenize words, and remove stopwords from corpus
+#'
+#' @param corpus a string representing a corpus
+#' @param ignore stopwords to ignore (optional, default: common English words and punctuations)
+#'
+#' @return character vector of word tokens
+#'
+#' @examples
+#' clean_tokens ("How many species of animals are there in Russia?")
+#' clean_tokens("How many species of animals are there in Russia?", ignore='!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')
+clean_tokens <- function(corpus, ignore=stopwords::stopwords("en")) {
+  tokenizers::tokenize_words(corpus, stopwords=ignore)
+}
+
 
 #' Generate basic statistic for words from the input corpus
 #'
