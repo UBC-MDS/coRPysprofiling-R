@@ -10,12 +10,12 @@ library(dplyr)
 library(word2vec)
 
 
-#' Download and load pretrained word2vector models (https://github.com/maxoodf/word2vec#basic-usage) 
+#' Download and load pretrained word2vector models (https://github.com/maxoodf/word2vec#basic-usage)
 #'
 #' @param dir character vector for name of dir where pretrained models will be downloaded, optional (default: "data")
 #' @param model_name character vector for name of w2v pretrained model file, optional (default: "cb_ns_500_10.w2v")
 #'
-#' @return word2vec model object 
+#' @return word2vec model object
 #' @export
 #'
 #' @examples
@@ -26,20 +26,25 @@ load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10.w2v") {
             "https://drive.google.com/file/d/0B1shHLc2QTzzTVZESDFpQk5jNG8",
             "https://drive.google.com/file/d/0B1shHLc2QTzzZl9vSS1FOFh1N0k",
             "https://drive.google.com/file/d/0B1shHLc2QTzzWFhpX2kwbWRkaWs")
-  
-  names(urls) <- c("cb_hs_500_10.w2v", 
-                   "cb_ns_500_10.w2v", 
-                   "sg_hs_500_10.w2v", 
+
+  names(urls) <- c("cb_hs_500_10.w2v",
+                   "cb_ns_500_10.w2v",
+                   "sg_hs_500_10.w2v",
                    "sg_ns_500_10.w2v")
-  
+
   if (!(model_name %in% names(urls))) {
-    stop(paste0(c("model_name should be one of: ", 
+    stop(paste0(c("model_name should be one of: ",
                   paste0(names(urls), collapse=', '))))
   }
-  
+
   folder_url <- urls[[model_name]]
-  
+
   path <- here::here(dir, model_name)
+
+  # create directory if it does not exist
+  try({
+    dir.create(dir, showWarnings = FALSE)
+  })
 
   # download the model if file at the given path does not already exist
   tryCatch(
@@ -117,10 +122,26 @@ corpus_viz <- function(corpus, display=TRUE) {
 #'
 #' @examples
 #' corpora_compare("kitten meows", "ice cream is yummy")
-corpora_compare <- function(corpus1, corpus2, metric="cosine_similarity") {
-  # Assumes pretrained model has been downloaded by user
-  path <- here("cb_ns_500_10.w2v")
-  model <- read.word2vec(file = path, normalize = TRUE)
+corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", model_name = "cb_ns_500_10.w2v") {
+  if (!is.character(c(corpus1, corpus2)) || length(corpus1) != 1 || length(corpus2) != 1) {
+    stop("inputs must be character vectors of length one")
+  }
+
+  if (length(metric) != 1 || !(metric %in% c("cosine_similarity", "euclidean"))) {
+    stop("metric must be cosine_similarity or euclidean")
+  }
+
+  names <- c("cb_hs_500_10.w2v",
+             "cb_ns_500_10.w2v",
+             "sg_hs_500_10.w2v",
+             "sg_ns_500_10.w2v")
+
+  if (!(model_name %in% names)) {
+    stop(paste0(c("model_name should be one of: ",
+                  paste0(names, collapse=', '))))
+  }
+
+  model <- load_pretrained(model_name = model_name)
   emb1 <- doc2vec(model, corpus1, type = "embedding")
   emb2 <- doc2vec(model, corpus2, type = "embedding")
 
