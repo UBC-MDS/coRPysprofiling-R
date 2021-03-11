@@ -31,9 +31,9 @@ corpus_analysis <- function(corpus) {
 
 #' Generate visualizations for words from the input corpus
 #'
-#' @param corpus a string representing a corpus
+#' @param corpus a character vector representing a corpus
 #'
-#' @return a dictionary of a word cloud, a histogram of word length frequencies, and a histogram of word frequencies 
+#' @return a list of a word cloud, a histogram of word length frequencies, and a histogram of word frequencies 
 #'
 #' @examples
 #' coRPysprofiling::corpus_viz("some text")
@@ -41,6 +41,10 @@ corpus_analysis <- function(corpus) {
 #' coRPysprofiling::corpus_viz("some text")['word freq bar chart']
 #' coRPysprofiling::corpus_viz("some text")['word length bar chart']
 corpus_viz <- function(corpus) {
+
+if (!is.character(corpus)) {
+    stop("inputs must be a character")
+  }
 
 # Step 1. To prepare the data frame df and df_30 where df will be used to 
 # plot the word cloud, and df_30 will be used to generate the other charts
