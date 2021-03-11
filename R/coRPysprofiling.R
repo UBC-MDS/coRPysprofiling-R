@@ -3,18 +3,33 @@ library(stopwords)
 library(googledrive)
 library(purrr)
 library(here)
+library(dplyr)
 library(word2vec)
 
 
-load_pretrained <- function(dir = "data", model_name = "pretrained.w2v") {
+load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10.w2v") {
+  urls <- c("https://drive.google.com/file/d/0B1shHLc2QTzzV1dhaVk1MUt2cmc",
+            "https://drive.google.com/file/d/0B1shHLc2QTzzTVZESDFpQk5jNG8",
+            "https://drive.google.com/file/d/0B1shHLc2QTzzZl9vSS1FOFh1N0k",
+            "https://drive.google.com/file/d/0B1shHLc2QTzzWFhpX2kwbWRkaWs")
+  
+  names(urls) <- c("cb_hs_500_10.w2v", 
+                   "cb_ns_500_10.w2v", 
+                   "sg_hs_500_10.w2v", 
+                   "sg_ns_500_10.w2v")
+  
+  if (!(model_name %in% names(urls))) {
+    stop(paste0(c("model_name should be one of: ", 
+                  paste0(names(urls), collapse=', '))))
+  }
+  
+  folder_url <- urls[[model_name]]
+  
   path <- here::here(dir, model_name)
 
   # Adapted from https://community.rstudio.com/t/how-to-download-a-google-drives-contents-based-on-drive-id-or-url/16896/13
   # credits to Jenny Bryan
   
-  ## store the URL you have
-  folder_url <- "https://drive.google.com/file/d/0B1shHLc2QTzzTVZESDFpQk5jNG8"
-
   ## identify this folder on Drive
   ## let googledrive know this is a file ID or URL, as opposed to file name
   pretrained <- drive_get(as_id(folder_url))
