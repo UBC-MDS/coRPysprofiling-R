@@ -7,6 +7,17 @@ library(dplyr)
 library(word2vec)
 
 
+#' Download and load pretrained word2vector models (https://github.com/maxoodf/word2vec#basic-usage) 
+#'
+#' @param dir character vector for name of dir where pretrained models will be downloaded, optional (default: "data")
+#' @param model_name character vector for name of w2v pretrained model file, optional (default: "cb_ns_500_10.w2v")
+#'
+#' @return word2vec model object 
+#' @export
+#'
+#' @examples
+#' load_pretrained()
+#' load_pretrained(model_name = "sg_hs_500_10.w2v")
 load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10.w2v") {
   urls <- c("https://drive.google.com/file/d/0B1shHLc2QTzzV1dhaVk1MUt2cmc",
             "https://drive.google.com/file/d/0B1shHLc2QTzzTVZESDFpQk5jNG8",
@@ -27,33 +38,34 @@ load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10.w2v") {
   
   path <- here::here(dir, model_name)
 
-  # Adapted from https://community.rstudio.com/t/how-to-download-a-google-drives-contents-based-on-drive-id-or-url/16896/13
-  # credits to Jenny Bryan
-  
-  ## identify this folder on Drive
-  ## let googledrive know this is a file ID or URL, as opposed to file name
-  pretrained <- drive_get(as_id(folder_url))
-
-  ## download the model if file at the given path does not already exist
-  # TODO: have a robust way of checking that the model is correct (and not empty,for example)
-  if (file.exists(path)) {
-    paste0("Downloaded model found. Loading downloaded model...")
-  }
-  else {
-    paste0("Downloading pretrained model for sentence embedding. This may take up to 10 minutes...")
-    drive_download(pretrained, path=path, overwrite = TRUE)
-    paste0("Download Complete!")
-    
-  }
-  model <- read.word2vec(file = path, normalize = TRUE)
+  # download the model if file at the given path does not already exist
+  tryCatch(
+    expr = {
+      read.word2vec(file=path, normalize=TRUE)
+      message("Downloaded model found. Loading downloaded model...")
+      },
+    error = function(cond) {
+      message("Downloading pretrained model for sentence embedding. This may take up to 10 minutes with stable internet connection...")
+      pretrained <- drive_get(as_id(folder_url))
+      drive_download(pretrained, path=path, overwrite = TRUE)
+      message("Download Complete!")
+      },
+    warning = function(cond) {
+      message("Warning message while trying to load pretrained model: ")
+      message(cond)
+      },
+    finally={
+      model <- read.word2vec(file = path, normalize = TRUE)
+      }
+    )
   model
 }
 
 
 #' Tokenize words, and remove stopwords from corpus
 #'
-#' @param corpus a string representing a corpus
-#' @param ignore stopwords to ignore (optional, default: common English words and punctuations)
+#' @param corpus character vector representing a corpus
+#' @param ignore stopwords to ignore, optional (default: common English words and punctuations)
 #'
 #' @return character vector of word tokens
 #'
@@ -67,7 +79,7 @@ clean_tokens <- function(corpus, ignore=stopwords::stopwords("en")) {
 
 #' Generate basic statistic for words from the input corpus
 #'
-#' @param corpus a string representing a corpus
+#' @param corpus character vector representing a corpus
 #'
 #' @return tibble
 #'
@@ -80,7 +92,7 @@ corpus_analysis <- function(corpus) {
 
 #' Generate visualizations for words from the input corpus
 #'
-#' @param corpus a string representing a corpus
+#' @param corpus a charactor vector representing a corpus
 #' @param display a boolean (optional); If display is False, the plots will be hidden from the output
 #'
 #' @return a dictionary of a word cloud, and a data frame, which can be used to draw a bar chart for words and word lengths
@@ -109,9 +121,9 @@ corpora_compare <- function(corpus1, corpus2, metric="cosine_similarity") {
 #' Returns a tibble of distances from the reference document for each corpus in a vector of corpora.
 #' This tibble is sorted in the order of increasing distance.
 #'
-#' @param refDoc character vector
-#' @param corpora character vector
-#' @param metric character vector, optional (default : "cosine_similarity")
+#' @param refDoc character vector for reference document
+#' @param corpora character vector for corpora
+#' @param metric character vector for metric used to calculate distance, optional (default : "cosine_similarity")
 #'
 #' @return tibble
 #' @export
