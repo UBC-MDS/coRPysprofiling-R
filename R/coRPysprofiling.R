@@ -95,8 +95,8 @@ clean_tokens <- function(corpus, ignore=stopwords::stopwords("en")) {
 #' corpus_analysis("How many animals in Russia? and how many in US?")
 #' corpus_analysis("How many animals in Russia? and how many in US?")["word_total", ]
 corpus_analysis <- function(corpus) {
-  if (!is.character(corpus)) {
-    stop("inputs must be a character")
+  if (!is.character(corpus)|length(corpus) != 1) {
+    stop("inputs must be character vectors of length one")
   }
 
   # get list of tokens and clean tokens from corpus
