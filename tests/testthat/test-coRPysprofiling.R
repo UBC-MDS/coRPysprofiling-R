@@ -44,7 +44,7 @@ test_that("Test whether the freq bar chart displays as expected", {
     expect_true(testCase1[['word freq bar chart']]$data$Freq[1] == 1)
     expect_equal(summary(testCase1[['word freq bar chart']]$data$word)['animals'][[1]], 1)
     expect_equal(summary(testCase2[['word freq bar chart']]$data$Freq)['Max.'][[1]], 6)    
-    expect_equal(nrow(testCase2[['word freq bar chart']][1]$data), 30)
+    expect_true(nrow(testCase2[['word freq bar chart']][1]$data) <= 30)
 })
 
 test_that("Test whether the length bar chart displays as expected", {
@@ -52,7 +52,8 @@ test_that("Test whether the length bar chart displays as expected", {
     expect_true(testCase1[['word length bar chart']]$data$length[[1]] == 7)
     expect_equal(summary(testCase1[['word length bar chart']]$data$word)['animals'][[1]], 1)
     expect_equal(summary(testCase2[['word length bar chart']]$data$length)['Max.'][[1]], 14)    
-    expect_equal(nrow(testCase2[['word length bar chart']][1]$data), 30)
+    expect_true(nrow(testCase2[['word length bar chart']][1]$data) <= 30)
+})
 })
 
 # Test related to corpora_compare function
