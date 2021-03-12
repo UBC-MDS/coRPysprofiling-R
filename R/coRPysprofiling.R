@@ -3,67 +3,71 @@ library(word2vec)
 library(here)
 library(tokenizers)
 library(stopwords)
-library(googledrive)
 library(purrr)
 library(here)
 library(dplyr)
 library(word2vec)
 
-
 #' Download and load pretrained word2vector models (https://github.com/maxoodf/word2vec#basic-usage)
 #'
 #' @param dir character vector for name of dir where pretrained models will be downloaded, optional (default: "data")
-#' @param model_name character vector for name of w2v pretrained model file, optional (default: "cb_ns_500_10.w2v")
+#' @param model_name character vector for name of pretrained model, optional (default: "cb_ns_500_10")
 #'
 #' @return word2vec model object
 #' @export
 #'
 #' @examples
 #' load_pretrained()
-#' load_pretrained(model_name = "sg_hs_500_10.w2v")
-load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10.w2v") {
-  urls <- c("https://drive.google.com/file/d/0B1shHLc2QTzzV1dhaVk1MUt2cmc",
-            "https://drive.google.com/file/d/0B1shHLc2QTzzTVZESDFpQk5jNG8",
-            "https://drive.google.com/file/d/0B1shHLc2QTzzZl9vSS1FOFh1N0k",
-            "https://drive.google.com/file/d/0B1shHLc2QTzzWFhpX2kwbWRkaWs")
+#' load_pretrained(model_name = "sg_hs_500_10")
+load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10") {
+  model_names <- c("cb_hs_500_10",
+                   "cb_ns_500_10",
+                   "sg_hs_500_10",
+                   "sg_ns_500_10")
+  FILE_EXT <- ".w2v"
 
-  names(urls) <- c("cb_hs_500_10.w2v",
-                   "cb_ns_500_10.w2v",
-                   "sg_hs_500_10.w2v",
-                   "sg_ns_500_10.w2v")
-
-  if (!(model_name %in% names(urls))) {
+  if (!(model_name %in% model_names)) {
     stop(paste0(c("model_name should be one of: ",
-                  paste0(names(urls), collapse=', '))))
+                  paste0(model_names, collapse=', '))))
   }
 
-  folder_url <- urls[[model_name]]
+  data_repo <- "https://raw.githubusercontent.com/UBC-MDS/glove_w2v_data/main/"
 
-  path <- here::here(dir, model_name)
-
-  # create directory if it does not exist
-  try({
-    dir.create(dir, showWarnings = FALSE)
-  })
+  dir_path <- here::here(dir, model_name)
+  file_path <- here::here(dir, model_name, paste0(model_name, FILE_EXT))
 
   # download the model if file at the given path does not already exist
   tryCatch(
     expr = {
-      read.word2vec(file=path, normalize=TRUE)
+      read.word2vec(file=file_path, normalize=TRUE)
       message("Downloaded model found. Loading downloaded model...")
       },
     error = function(cond) {
-      message("Downloading pretrained model for sentence embedding. This may take up to 10 minutes with stable internet connection...")
-      pretrained <- drive_get(as_id(folder_url))
-      drive_download(pretrained, path=path, overwrite = TRUE)
-      message("Download Complete!")
+      options(timeout=600)
+      file_urls <- paste0(data_repo, model_name, "/", model_name, "w2v", 1:9, ".bin")
+      dest_files <- here::here(dir, model_name, paste0(model_name, "w2v", 1:9, ".bin"))
+      # create files if they do not exist
+      try({
+        dir.create(dir_path, recursive = TRUE, showWarnings=FALSE)
+        file.create(dest_files)
+      })
+      message("Model was not found locally. Downloading and processing this pretrained model can take up to 20 minutes in total.")
+      message("This will only need to be run once for each pretrained model.")
+      message("Downloading pretrained model for sentence embedding. This part may take up to 10 minutes with stable internet connection...")
+      download.file(file_urls, destfile = dest_files, method = "libcurl", mode = "wb")
+      message("Download Complete! Processing raw files. This part may also take up to 10 minutes...")
+      raw_data <- list()
+      files <- here::here(dir, model_name, dir(dir_path))
+      for(i in seq_along(files)) raw_data[[i]] <- readBin(files[i], "raw", 99e6)
+      raw_data <- do.call("c", raw_data)
+      writeBin(raw_data, con=file_path)
       },
     warning = function(cond) {
       message("Warning message while trying to load pretrained model: ")
       message(cond)
       },
     finally={
-      model <- read.word2vec(file = path, normalize = TRUE)
+      model <- read.word2vec(file=file_path, normalize = TRUE)
       }
     )
   model
@@ -215,7 +219,7 @@ return(l)
 #'
 #' @examples
 #' corpora_compare("kitten meows", "ice cream is yummy")
-corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", model_name = "cb_ns_500_10.w2v") {
+corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", model_name = "cb_ns_500_10") {
   if (!is.character(corpus1) || !is.character(corpus2) || length(corpus1) != 1 || length(corpus2) != 1) {
     stop("inputs must be character vectors of length one")
   }
@@ -224,10 +228,10 @@ corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", mode
     stop("metric must be cosine_similarity or euclidean")
   }
 
-  names <- c("cb_hs_500_10.w2v",
-             "cb_ns_500_10.w2v",
-             "sg_hs_500_10.w2v",
-             "sg_ns_500_10.w2v")
+  names <- c("cb_hs_500_10",
+             "cb_ns_500_10",
+             "sg_hs_500_10",
+             "sg_ns_500_10")
 
   if (!(model_name %in% names) || length(model_name) != 1) {
     stop(paste0(c("model_name should be one of: ",
