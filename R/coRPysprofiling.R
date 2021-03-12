@@ -39,7 +39,7 @@ load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10") {
   # download the model if file at the given path does not already exist
   tryCatch(
     expr = {
-      read.word2vec(file=file_path, normalize=TRUE)
+      word2vec::read.word2vec(file=file_path, normalize=TRUE)
       message("Downloaded model found. Loading downloaded model...")
       },
     error = function(cond) {
@@ -67,7 +67,7 @@ load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10") {
       message(cond)
       },
     finally={
-      model <- read.word2vec(file=file_path, normalize = TRUE)
+      model <- word2vec::read.word2vec(file=file_path, normalize = TRUE)
       }
     )
   model
@@ -100,7 +100,7 @@ clean_tokens <- function(corpus, ignore=stopwords::stopwords("en")) {
 #' corpus_analysis("How many animals in Russia? and how many in US?")["word_total", ]
 corpus_analysis <- function(corpus) {
   if (!is.character(corpus)|length(corpus) != 1) {
-    stop("inputs must be character vectors of length one")
+    stop("input must be a character vector of length one")
   }
 
   # get list of tokens and clean tokens from corpus
@@ -149,7 +149,7 @@ corpus_analysis <- function(corpus) {
 corpus_viz <- function(corpus) {
 
 if (!is.character(corpus)) {
-    stop("inputs must be a character")
+    stop("input must be a character")
   }
 
 # Step 1. To prepare the data frame df and df_30 where df will be used to
@@ -213,6 +213,7 @@ return(l)
 #' @param corpus1 character vector
 #' @param corpus2 character vector
 #' @param metric character vector, optional (default : "cosine_similarity")
+#' @param model_name character vector, optional (default : "cb_ns_500_10")
 #'
 #' @return double vector
 #' @export
@@ -252,6 +253,10 @@ corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", mode
     score <- sqrt(sum((emb1-emb2)^2))
   }
 
+  # garbage collection because model hogs memory
+  model <- NULL
+  gc()
+  
   abs(as.numeric(score))
 }
 
@@ -261,12 +266,37 @@ corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", mode
 #' @param refDoc character vector for reference document
 #' @param corpora character vector for corpora
 #' @param metric character vector for metric used to calculate distance, optional (default : "cosine_similarity")
+#' @param model_name character vector, optional (default : "cb_ns_500_10")
 #'
 #' @return tibble
 #' @export
 #'
 #' @examples
-#' corpora_best_match(("kitten meows", c("ice cream is yummy", "cat meowed", "dog barks", "The Hitchhiker's Guide to the Galaxy has become an international multi-media phenomenon"))
-corpora_best_match <- function(refDoc, corpora, metric="cosine_similarity") {
+#' corpora_best_match("kitten meows", c("ice cream is yummy", "cat meowed", "dog barks", "The Hitchhiker's Guide to the Galaxy has become an international multi-media phenomenon"))
+corpora_best_match <- function(refDoc, corpora, metric="cosine_similarity", model_name="cb_ns_500_10") {
+  if (!is.character(refDoc) || !is.character(corpora) || length(refDoc) != 1) {
+    stop("inputs must be character vectors of length one")
+  }
+  
+  if (length(metric) != 1 || !(metric %in% c("cosine_similarity", "euclidean"))) {
+    stop("metric must be cosine_similarity or euclidean")
+  }
 
+  names <- c("cb_hs_500_10",
+           "cb_ns_500_10",
+           "sg_hs_500_10",
+           "sg_ns_500_10")
+
+  if (!(model_name %in% names) || length(model_name) != 1) {
+    stop(paste0(c("model_name should be one of: ",
+                  paste0(names, collapse=', '))))
+  }
+  
+  distances = length(corpora)
+  for (i in seq_along(corpora)) {
+    distances[i] <- corpora_compare(refDoc, corpora[i], metric=metric, model_name=model_name)
+  }
+  dist_df <- tibble(corpora = corpora, metric = distances) %>%
+    arrange(metric)
+  dist_df
 }
