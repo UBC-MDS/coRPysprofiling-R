@@ -1,10 +1,79 @@
+
+library(word2vec)
+library(here)
 library(tokenizers)
 library(stopwords)
+library(googledrive)
+library(purrr)
+library(here)
+library(dplyr)
+library(word2vec)
+
+
+#' Download and load pretrained word2vector models (https://github.com/maxoodf/word2vec#basic-usage)
+#'
+#' @param dir character vector for name of dir where pretrained models will be downloaded, optional (default: "data")
+#' @param model_name character vector for name of w2v pretrained model file, optional (default: "cb_ns_500_10.w2v")
+#'
+#' @return word2vec model object
+#' @export
+#'
+#' @examples
+#' load_pretrained()
+#' load_pretrained(model_name = "sg_hs_500_10.w2v")
+load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10.w2v") {
+  urls <- c("https://drive.google.com/file/d/0B1shHLc2QTzzV1dhaVk1MUt2cmc",
+            "https://drive.google.com/file/d/0B1shHLc2QTzzTVZESDFpQk5jNG8",
+            "https://drive.google.com/file/d/0B1shHLc2QTzzZl9vSS1FOFh1N0k",
+            "https://drive.google.com/file/d/0B1shHLc2QTzzWFhpX2kwbWRkaWs")
+
+  names(urls) <- c("cb_hs_500_10.w2v",
+                   "cb_ns_500_10.w2v",
+                   "sg_hs_500_10.w2v",
+                   "sg_ns_500_10.w2v")
+
+  if (!(model_name %in% names(urls))) {
+    stop(paste0(c("model_name should be one of: ",
+                  paste0(names(urls), collapse=', '))))
+  }
+
+  folder_url <- urls[[model_name]]
+
+  path <- here::here(dir, model_name)
+
+  # create directory if it does not exist
+  try({
+    dir.create(dir, showWarnings = FALSE)
+  })
+
+  # download the model if file at the given path does not already exist
+  tryCatch(
+    expr = {
+      read.word2vec(file=path, normalize=TRUE)
+      message("Downloaded model found. Loading downloaded model...")
+      },
+    error = function(cond) {
+      message("Downloading pretrained model for sentence embedding. This may take up to 10 minutes with stable internet connection...")
+      pretrained <- drive_get(as_id(folder_url))
+      drive_download(pretrained, path=path, overwrite = TRUE)
+      message("Download Complete!")
+      },
+    warning = function(cond) {
+      message("Warning message while trying to load pretrained model: ")
+      message(cond)
+      },
+    finally={
+      model <- read.word2vec(file = path, normalize = TRUE)
+      }
+    )
+  model
+}
+
 
 #' Tokenize words, and remove stopwords from corpus
 #'
-#' @param corpus a string representing a corpus
-#' @param ignore stopwords to ignore (optional, default: common English words and punctuations)
+#' @param corpus character vector representing a corpus
+#' @param ignore stopwords to ignore, optional (default: common English words and punctuations)
 #'
 #' @return character vector of word tokens
 #'
@@ -18,7 +87,7 @@ clean_tokens <- function(corpus, ignore=stopwords::stopwords("en")) {
 
 #' Generate basic statistic for words from the input corpus
 #'
-#' @param corpus a string representing a corpus
+#' @param corpus character vector representing a corpus
 #'
 #' @return tibble
 #'
@@ -108,21 +177,53 @@ return(l)
 #' @param corpus2 character vector
 #' @param metric character vector, optional (default : "cosine_similarity")
 #'
-#' @return numeric vector
+#' @return double vector
 #' @export
 #'
 #' @examples
 #' corpora_compare("kitten meows", "ice cream is yummy")
-corpora_compare <- function(corpus1, corpus2, metric="cosine_similarity") {
+corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", model_name = "cb_ns_500_10.w2v") {
+  if (!is.character(corpus1) || !is.character(corpus2) || length(corpus1) != 1 || length(corpus2) != 1) {
+    stop("inputs must be character vectors of length one")
+  }
 
+  if (length(metric) != 1 || !(metric %in% c("cosine_similarity", "euclidean"))) {
+    stop("metric must be cosine_similarity or euclidean")
+  }
+
+  names <- c("cb_hs_500_10.w2v",
+             "cb_ns_500_10.w2v",
+             "sg_hs_500_10.w2v",
+             "sg_ns_500_10.w2v")
+
+  if (!(model_name %in% names) || length(model_name) != 1) {
+    stop(paste0(c("model_name should be one of: ",
+                  paste0(names, collapse=', '))))
+  }
+
+  model <- load_pretrained(model_name = model_name)
+  emb1 <- doc2vec(model, corpus1, type = "embedding")
+  emb2 <- doc2vec(model, corpus2, type = "embedding")
+
+  if (metric == "cosine_similarity"){
+    score <- 1 - (
+      emb1 %*% t(emb2) / sqrt(sum(emb1^2)*sum(emb2^2))
+    )
+  }
+
+  if (metric == "euclidean"){
+    score <- sqrt(sum((emb1-emb2)^2))
+  }
+
+  abs(as.numeric(score))
 }
 
 #' Returns a tibble of distances from the reference document for each corpus in a vector of corpora.
 #' This tibble is sorted in the order of increasing distance.
 #'
-#' @param refDoc character vector
-#' @param corpora character vector
-#' @param metric character vector, optional (default : "cosine_similarity")
+#' @param refDoc character vector for reference document
+#' @param corpora character vector for corpora
+#' @param metric character vector for metric used to calculate distance, optional (default : "cosine_similarity")
 #'
 #' @return tibble
 #' @export
