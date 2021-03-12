@@ -63,7 +63,7 @@ load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10") {
       files <- here::here(dir, model_name, dir(dir_path))
       for(i in seq_along(files)) raw_data[[i]] <- readBin(files[i], "raw", 99e6)
       raw_data <- do.call("c", raw_data)
-      write(raw_data, file = file_path)
+      writeBin(raw_data, file=file_path)
       },
     warning = function(cond) {
       message("Warning message while trying to load pretrained model: ")
