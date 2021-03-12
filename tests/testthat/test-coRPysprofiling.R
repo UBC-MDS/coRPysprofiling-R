@@ -21,13 +21,13 @@ test_that("Distances should be between 0 and 1 inclusive for cosine_similarity a
   expect_gte(testCase2, 0)
 })
 
-test_that("Exception handling working as intendend", {
+test_that("Exception handling working as intended", {
   expect_error(corpora_compare(corpus1, 123), "inputs must be character vectors of length one")
   expect_error(corpora_compare(c(corpus1, corpus2), corpus1), "inputs must be character vectors of length one")
   expect_error(corpora_compare(123, corpus1), "inputs must be character vectors of length one")
   expect_error(corpora_compare(123, list(1, 2, 3)), "inputs must be character vectors of length one")
   expect_error(corpora_compare(corpus1, corpus2, metric = "other"), "metric must be cosine_similarity or euclidean")
   expect_error(corpora_compare(corpus1, corpus2, metric = c("cosine_similarity","euclidean")), "metric must be cosine_similarity or euclidean")
-  expect_error(corpora_compare(corpus1, corpus2, model_name = "other"),"model_name should be one of: cb_hs_500_10.w2v, cb_ns_500_10.w2v, sg_hs_500_10.w2v, sg_ns_500_10.w2v")
-  expect_error(corpora_compare(corpus1, corpus2, model_name = c("cb_hs_500_10.w2v", "cb_ns_500_10.w2v")),"model_name should be one of: cb_hs_500_10.w2v, cb_ns_500_10.w2v, sg_hs_500_10.w2v, sg_ns_500_10.w2v")
+  expect_error(corpora_compare(corpus1, corpus2, model_name = "other"),"model_name should be one of: cb_hs_500_10, cb_ns_500_10, sg_hs_500_10, sg_ns_500_10")
+  expect_error(corpora_compare(corpus1, corpus2, model_name = c("cb_hs_500_10", "cb_ns_500_10")),"model_name should be one of: cb_hs_500_10, cb_ns_500_10, sg_hs_500_10, sg_ns_500_10")
 })
