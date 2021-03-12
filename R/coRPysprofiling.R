@@ -54,7 +54,7 @@ load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10") {
         dir.create(dir_path, recursive = TRUE, showWarnings=FALSE)
         file.create(dest_files)
       })
-      message("Model was not found locally. Downloading and processing this pretrained model can take up to 20 minutes in total."
+      message("Model was not found locally. Downloading and processing this pretrained model can take up to 20 minutes in total.")
       message("This will only need to be run once for each pretrained model.")
       message("Downloading pretrained model for sentence embedding. This part may take up to 10 minutes with stable internet connection...")
       download.file(file_urls, destfile = dest_files)
@@ -63,7 +63,7 @@ load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10") {
       files <- here::here(dir, model_name, dir(dir_path))
       for(i in seq_along(files)) raw_data[[i]] <- readBin(files[i], "raw", 99e6)
       raw_data <- do.call("c", raw_data)
-      writeBin(raw_data, file=file_path)
+      writeBin(raw_data, con=file_path)
       },
     warning = function(cond) {
       message("Warning message while trying to load pretrained model: ")
