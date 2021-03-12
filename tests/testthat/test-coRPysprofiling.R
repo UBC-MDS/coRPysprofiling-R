@@ -1,3 +1,25 @@
+
+# Test related to corpora_analysis function
+corpus <- "How many species of animals are there in Russia? and how many in US"
+
+testCase1 <- corpus_analysis(corpus)
+
+test_that("corpora_compare returns data frame with 1 column and 6 rows", {
+  expect_equal(nrow(testCase1), 6)
+  expect_equal(ncol(testCase1), 1)
+})
+
+test_that("total words of this corpus should be 14", {
+  expect_equal(testCase1["word_total", ], 14)
+})
+
+test_that("Exception handling working as intendend", {
+  expect_error(corpus_analysis(123), "inputs must be character vectors of length one")
+  expect_error(corpus_analysis(c("Hello!", "Bye!")), "inputs must be character vectors of length one")
+})
+
+
+
 # Test related to corpora_compare function
 corpus1 <- "kitten meows"
 corpus2 <- "kitten meows"
