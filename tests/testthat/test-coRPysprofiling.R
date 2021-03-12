@@ -13,8 +13,8 @@ test_that("total words of this corpus should be 14", {
 })
 
 test_that("Exception handling working as intendend", {
-  expect_error(corpus_analysis(123), "inputs must be character vectors of length one")
-  expect_error(corpus_analysis(c("Hello!", "Bye!")), "inputs must be character vectors of length one")
+  expect_error(corpus_analysis(123), "input must be a character vector of length one")
+  expect_error(corpus_analysis(c("Hello!", "Bye!")), "input must be a character vector of length one")
 })
 
 
@@ -43,12 +43,12 @@ test_that("corpus_viz returns a list", {
 
 # Tests whether the corpus_viz[['some_corpus']] returns a ggplot
 test_that("Return type is a ggplot", {
-    expect_is(testCase1[['word cloud']], 'ggplot')
-    expect_is(testCase1[['word freq bar chart']], 'ggplot')
-    expect_is(testCase1[['word length bar chart']], 'ggplot')
-    expect_is(testCase2[['word cloud']], 'ggplot')
-    expect_is(testCase2[['word freq bar chart']], 'ggplot')
-    expect_is(testCase2[['word length bar chart']], 'ggplot')
+    expect_s3_class(testCase1[['word cloud']], 'ggplot')
+    expect_s3_class(testCase1[['word freq bar chart']], 'ggplot')
+    expect_s3_class(testCase1[['word length bar chart']], 'ggplot')
+    expect_s3_class(testCase2[['word cloud']], 'ggplot')
+    expect_s3_class(testCase2[['word freq bar chart']], 'ggplot')
+    expect_s3_class(testCase2[['word length bar chart']], 'ggplot')
 })
 
 
@@ -92,8 +92,8 @@ test_that("Identical corpora should return score of 0.0", {
   expect_equal(testCase2, 0)
 })
 
-test_that("Distances should be between 0 and 1 inclusive for cosine_similarity and greater than 0 for euclidean", {
-  expect_lte(testCase1, 1)
+test_that("Distances should be between 0 and 2 inclusive for cosine_similarity and greater than 0 for euclidean", {
+  expect_lte(testCase1, 2)
   expect_gte(testCase1, 0)
   expect_gte(testCase2, 0)
 })
@@ -106,5 +106,50 @@ test_that("Exception handling working as intended", {
   expect_error(corpora_compare(corpus1, corpus2, metric = "other"), "metric must be cosine_similarity or euclidean")
   expect_error(corpora_compare(corpus1, corpus2, metric = c("cosine_similarity","euclidean")), "metric must be cosine_similarity or euclidean")
   expect_error(corpora_compare(corpus1, corpus2, model_name = "other"),"model_name should be one of: cb_hs_500_10, cb_ns_500_10, sg_hs_500_10, sg_ns_500_10")
-  expect_error(corpora_compare(corpus1, corpus2, model_name = c("cb_hs_500_10", "cb_ns_500_10")),"model_name should be one of: cb_hs_500_10, cb_ns_500_10, sg_hs_500_10, sg_ns_500_10")
+  expect_error(corpora_compare(corpus1, corpus2, model_name = c("cb_hs_500_10", "cb_ns_500_10")), "model_name should be one of: cb_hs_500_10, cb_ns_500_10, sg_hs_500_10, sg_ns_500_10")
 })
+
+# Test related to corpora_best_match function
+refDoc = "kitten meows"
+corpora = c("kitten meows", "ice cream is yummy", "cat meowed", "dog barks")
+testCase1 = corpora_best_match(refDoc, corpora)
+testCase2 = corpora_best_match(refDoc, corpora, metric="euclidean")
+
+test_that("corpora_best_match should return tibble with 4 rows and 2 columns", {
+  # We expect a tibble...
+  expect_s3_class(testCase1, "tbl")
+  expect_s3_class(testCase2, "tbl")
+  # with 4 rows...
+  expect_equal(nrow(testCase1), 4)
+  expect_equal(nrow(testCase2), 4)
+  # and 2 columns
+  expect_length(testCase1, 2)
+  expect_length(testCase2, 2)
+})
+
+test_that("corpora column in corpora_best_match should match the corpora passed to the function", {
+  expect_setequal(testCase1$corpora, corpora)
+  expect_setequal(testCase2$corpora, corpora)
+})
+
+test_that("distances should be of type double, and between 0 and 2 inclusive for cosine_similarity and greater than or equal to 0 for euclidean", {
+  expect_type(testCase1$metric, "double")
+  expect_true(all(testCase1$metric >= 0))
+  expect_true(all(testCase1$metric <= 2))
+  
+  expect_type(testCase2$metric, "double")
+  expect_true(all(testCase2$metric >= 0))
+})  
+
+test_that("Exception handling working as intended", {
+  expect_error(corpora_best_match(refDoc, 123), "corpora must be a character vector")
+  expect_error(corpora_best_match(refDoc, list()), "corpora must be a character vector")
+  expect_error(corpora_best_match(c(refDoc, refDoc), corpora), "refDoc must be a character vectors of length one")
+  expect_error(corpora_best_match(123, corpora), "refDoc must be a character vectors of length one")
+  expect_error(corpora_best_match(list(1, 2, 3), corpora), "refDoc must be a character vectors of length one")
+  expect_error(corpora_best_match(refDoc, corpora, metric = "other"), "metric must be cosine_similarity or euclidean")
+  expect_error(corpora_best_match(refDoc, corpora, metric = c("cosine_similarity","euclidean")), "metric must be cosine_similarity or euclidean")
+  expect_error(corpora_best_match(refDoc, corpora, model_name = "other"),"model_name should be one of: cb_hs_500_10, cb_ns_500_10, sg_hs_500_10, sg_ns_500_10")
+  expect_error(corpora_best_match(refDoc, corpora, model_name = c("cb_hs_500_10", "cb_ns_500_10")),"model_name should be one of: cb_hs_500_10, cb_ns_500_10, sg_hs_500_10, sg_ns_500_10")
+})
+

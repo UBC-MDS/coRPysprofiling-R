@@ -274,8 +274,12 @@ corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", mode
 #' @examples
 #' corpora_best_match("kitten meows", c("ice cream is yummy", "cat meowed", "dog barks", "The Hitchhiker's Guide to the Galaxy has become an international multi-media phenomenon"))
 corpora_best_match <- function(refDoc, corpora, metric="cosine_similarity", model_name="cb_ns_500_10") {
-  if (!is.character(refDoc) || !is.character(corpora) || length(refDoc) != 1) {
-    stop("inputs must be character vectors of length one")
+  if (!is.character(refDoc) || length(refDoc) != 1) {
+    stop("refDoc must be a character vectors of length one")
+  }
+  
+  if (!is.character(corpora)) {
+    stop("corpora must be a character vector")
   }
   
   if (length(metric) != 1 || !(metric %in% c("cosine_similarity", "euclidean"))) {
