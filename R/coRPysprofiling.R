@@ -54,7 +54,9 @@ load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10") {
       message("Model was not found locally. Downloading and processing this pretrained model can take up to 20 minutes in total.")
       message("This will only need to be run once for each pretrained model.")
       message("Downloading pretrained model for sentence embedding. This part may take up to 10 minutes with stable internet connection...")
-      download.file(file_urls, destfile = dest_files)
+      for(i in seq_along(file_urls)){
+        download.file(file_urls[i], destfile = dest_files[i])
+      }
       message("Download Complete! Processing raw files. This part may also take up to 10 minutes...")
       raw_data <- list()
       files <- here::here(dir, model_name, dir(dir_path))
