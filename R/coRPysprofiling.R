@@ -146,8 +146,8 @@ corpus_analysis <- function(corpus) {
 #' coRPysprofiling::corpus_viz("some text")['word length bar chart']
 corpus_viz <- function(corpus) {
 
-if (!is.character(corpus)) {
-    stop("input must be a character")
+if (!is.character(corpus) || length(corpus) != 1) {
+    stop("input must be a character vector of length 1")
   }
 
 # Step 1. To prepare the data frame df and df_30 where df will be used to
@@ -238,8 +238,8 @@ corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", mode
   }
 
   model <- load_pretrained(model_name = model_name)
-  emb1 <- doc2vec(model, corpus1, type = "embedding")
-  emb2 <- doc2vec(model, corpus2, type = "embedding")
+  emb1 <- word2vec::doc2vec(model, corpus1, type = "embedding")
+  emb2 <- word2vec::doc2vec(model, corpus2, type = "embedding")
 
   if (metric == "cosine_similarity"){
     score <- 1 - (
@@ -254,7 +254,7 @@ corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", mode
   # garbage collection because model hogs memory
   model <- NULL
   gc()
-  
+
   abs(as.numeric(score))
 }
 
@@ -275,11 +275,11 @@ corpora_best_match <- function(refDoc, corpora, metric="cosine_similarity", mode
   if (!is.character(refDoc) || length(refDoc) != 1) {
     stop("refDoc must be a character vectors of length one")
   }
-  
+
   if (!is.character(corpora)) {
     stop("corpora must be a character vector")
   }
-  
+
   if (length(metric) != 1 || !(metric %in% c("cosine_similarity", "euclidean"))) {
     stop("metric must be cosine_similarity or euclidean")
   }
@@ -293,12 +293,12 @@ corpora_best_match <- function(refDoc, corpora, metric="cosine_similarity", mode
     stop(paste0(c("model_name should be one of: ",
                   paste0(names, collapse=', '))))
   }
-  
+
   distances = length(corpora)
   for (i in seq_along(corpora)) {
     distances[i] <- corpora_compare(refDoc, corpora[i], metric=metric, model_name=model_name)
   }
-  dist_df <- tibble(corpora = corpora, metric = distances) %>%
-    arrange(metric)
+  dist_df <- dplyr::tibble(corpora = corpora, metric = distances) %>%
+    dplyr::arrange(metric)
   dist_df
 }
