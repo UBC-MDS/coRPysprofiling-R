@@ -3,13 +3,10 @@ library(word2vec)
 library(here)
 library(tokenizers)
 library(stopwords)
-library(googledrive)
 library(purrr)
 library(here)
 library(dplyr)
 library(word2vec)
-
-options(gargle_oob_default = TRUE)
 
 #' Download and load pretrained word2vector models (https://github.com/maxoodf/word2vec#basic-usage)
 #'

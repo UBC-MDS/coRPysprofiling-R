@@ -1,5 +1,3 @@
-options(gargle_oob_default = TRUE)
-
 # Test related to corpora_compare function
 corpus1 <- "kitten meows"
 corpus2 <- "kitten meows"
