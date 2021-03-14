@@ -1,12 +1,3 @@
-
-library(word2vec)
-library(here)
-library(tokenizers)
-library(stopwords)
-library(here)
-library(dplyr)
-library(word2vec)
-
 #' Download and load pretrained word2vector models (https://github.com/maxoodf/word2vec#basic-usage)
 #'
 #' @param dir character vector for name of dir where pretrained models will be downloaded, optional (default: "data")
@@ -84,6 +75,14 @@ load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10") {
 #' clean_tokens ("How many species of animals are there in Russia?")
 #' clean_tokens("How many species of animals are there in Russia?", ignore='!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')
 clean_tokens <- function(corpus, ignore=stopwords::stopwords("en")) {
+  if (!is.character(corpus) || length(corpus) != 1) {
+    stop("input for corpus must be a character vector of length one")
+  }
+  
+  if (!is.character(ignore)) {
+    stop("input for ignore must be a character vector")
+  }
+  
   tokenizers::tokenize_words(corpus, stopwords=ignore)
 }
 

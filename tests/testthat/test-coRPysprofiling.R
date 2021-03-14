@@ -1,3 +1,21 @@
+# Test related to clean_tokens helper function
+corpus <- "How many species of animals are there in Russia? and how many in US"
+
+testCase1 <- clean_tokens(corpus)[[1]]
+testCase2 <- clean_tokens(corpus, ignore="")[[1]]
+
+test_that("tokens returned by clean_tokens does not match the expected results", {
+  expect_setequal(testCase1, c("many", "species", "animals", "russia", "many", "us"))
+  expect_setequal(testCase2, c("how", "many", "species", "of", "animals", "are", "there", "in", "russia", "and", "how", "many", "in", "us"))
+})
+
+test_that("Exception handling working as intendend", {
+  expect_error(clean_tokens(123), "input for corpus must be a character vector of length one")
+  expect_error(clean_tokens(c("Hello!", "Bye!")), "input for corpus must be a character vector of length one")
+  expect_error(clean_tokens(corpus, ignore=123), "input for ignore must be a character vector")
+})
+
+
 # Test related to corpora_analysis function
 corpus <- "How many species of animals are there in Russia? and how many in US"
 
