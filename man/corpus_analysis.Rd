@@ -7,14 +7,15 @@
 corpus_analysis(corpus)
 }
 \arguments{
-\item{corpus}{a string representing a corpus}
+\item{corpus}{character vector representing a corpus}
 }
 \value{
-tibble
+data.frame
 }
 \description{
 Generate basic statistic for words from the input corpus
 }
 \examples{
-corpus_analysis("How many animals in Russia?")
+coRPysprofiling::corpus_analysis("How many animals in Russia? and how many in US?")
+coRPysprofiling::corpus_analysis("How many animals in Russia? and how many in US?")["word_total", ]
 }

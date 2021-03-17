@@ -7,8 +7,8 @@
 #' @export
 #'
 #' @examples
-#' load_pretrained()
-#' load_pretrained(model_name = "sg_hs_500_10")
+#' coRPysprofiling::load_pretrained()
+#' coRPysprofiling::load_pretrained(model_name = "sg_hs_500_10")
 load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10") {
   model_names <- c("cb_hs_500_10",
                    "cb_ns_500_10",
@@ -70,19 +70,20 @@ load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10") {
 #' @param ignore stopwords to ignore, optional (default: common English words and punctuations)
 #'
 #' @return character vector of word tokens
+#' @export
 #'
 #' @examples
-#' clean_tokens ("How many species of animals are there in Russia?")
-#' clean_tokens("How many species of animals are there in Russia?", ignore='!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')
+#' coRPysprofiling::clean_tokens("How many species of animals are there in Russia?")
+#' coRPysprofiling::clean_tokens("How many species of animals are there in Russia?", ignore='!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')
 clean_tokens <- function(corpus, ignore=stopwords::stopwords("en")) {
   if (!is.character(corpus) || length(corpus) != 1) {
     stop("input for corpus must be a character vector of length one")
   }
-  
+
   if (!is.character(ignore)) {
     stop("input for ignore must be a character vector")
   }
-  
+
   tokenizers::tokenize_words(corpus, stopwords=ignore)
 }
 
@@ -92,10 +93,11 @@ clean_tokens <- function(corpus, ignore=stopwords::stopwords("en")) {
 #' @param corpus character vector representing a corpus
 #'
 #' @return data.frame
+#' @export
 #'
 #' @examples
-#' corpus_analysis("How many animals in Russia? and how many in US?")
-#' corpus_analysis("How many animals in Russia? and how many in US?")["word_total", ]
+#' coRPysprofiling::corpus_analysis("How many animals in Russia? and how many in US?")
+#' coRPysprofiling::corpus_analysis("How many animals in Russia? and how many in US?")["word_total", ]
 corpus_analysis <- function(corpus) {
   if (!is.character(corpus)|length(corpus) != 1) {
     stop("input must be a character vector of length one")
@@ -112,7 +114,7 @@ corpus_analysis <- function(corpus) {
   token_avg_len <- mean(stringi::stri_length(token_clean))
 
   # get sentences from corpus
-  sents <- tokenize_sentences(corpus)[[1]]
+  sents <- tokenizers::tokenize_sentences(corpus)[[1]]
   sents_tokenize <- unlist(lapply(sents, clean_tokens), recursive = FALSE)
 
   # get statistics of sentences
@@ -138,6 +140,7 @@ corpus_analysis <- function(corpus) {
 #' @param corpus a character vector representing a corpus
 #'
 #' @return a list of a word cloud, a histogram of word length frequencies, and a histogram of word frequencies
+#' @export
 #'
 #' @examples
 #' coRPysprofiling::corpus_viz("some text")
@@ -217,7 +220,7 @@ return(l)
 #' @export
 #'
 #' @examples
-#' corpora_compare("kitten meows", "ice cream is yummy")
+#' coRPysprofiling::corpora_compare("kitten meows", "ice cream is yummy")
 corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", model_name = "cb_ns_500_10") {
   if (!is.character(corpus1) || !is.character(corpus2) || length(corpus1) != 1 || length(corpus2) != 1) {
     stop("inputs must be character vectors of length one")
@@ -232,7 +235,7 @@ corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", mode
              "sg_hs_500_10",
              "sg_ns_500_10")
 
-  if (!(model_name %in% names) || length(model_name) != 1) {
+  if (length(model_name) != 1 || !(model_name %in% names)) {
     stop(paste0(c("model_name should be one of: ",
                   paste0(names, collapse=', '))))
   }
@@ -270,7 +273,7 @@ corpora_compare <- function(corpus1, corpus2, metric = "cosine_similarity", mode
 #' @export
 #'
 #' @examples
-#' corpora_best_match("kitten meows", c("ice cream is yummy", "cat meowed", "dog barks", "The Hitchhiker's Guide to the Galaxy has become an international multi-media phenomenon"))
+#' coRPysprofiling::corpora_best_match("kitten meows", c("ice cream is yummy", "cat meowed", "dog barks", "The Hitchhiker's Guide to the Galaxy has become an international multi-media phenomenon"))
 corpora_best_match <- function(refDoc, corpora, metric="cosine_similarity", model_name="cb_ns_500_10") {
   if (!is.character(refDoc) || length(refDoc) != 1) {
     stop("refDoc must be a character vectors of length one")
@@ -289,7 +292,7 @@ corpora_best_match <- function(refDoc, corpora, metric="cosine_similarity", mode
            "sg_hs_500_10",
            "sg_ns_500_10")
 
-  if (!(model_name %in% names) || length(model_name) != 1) {
+  if (length(model_name) != 1 || !(model_name %in% names)) {
     stop(paste0(c("model_name should be one of: ",
                   paste0(names, collapse=', '))))
   }
@@ -298,7 +301,7 @@ corpora_best_match <- function(refDoc, corpora, metric="cosine_similarity", mode
   for (i in seq_along(corpora)) {
     distances[i] <- corpora_compare(refDoc, corpora[i], metric=metric, model_name=model_name)
   }
-  dist_df <- dplyr::tibble(corpora = corpora, metric = distances) %>%
-    dplyr::arrange(metric)
+  dist_df <- dplyr::tibble(corpora = corpora, metric = distances)
+  dist_df <- dplyr::arrange(dist_df, metric)
   dist_df
 }

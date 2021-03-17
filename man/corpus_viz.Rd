@@ -4,19 +4,20 @@
 \alias{corpus_viz}
 \title{Generate visualizations for words from the input corpus}
 \usage{
-corpus_viz(corpus, display = TRUE)
+corpus_viz(corpus)
 }
 \arguments{
-\item{corpus}{a string representing a corpus}
-
-\item{display}{a boolean (optional); If display is False, the plots will be hidden from the output}
+\item{corpus}{a character vector representing a corpus}
 }
 \value{
-a dictionary of a word cloud, and a data frame, which can be used to draw a bar chart for words and word lengths
+a list of a word cloud, a histogram of word length frequencies, and a histogram of word frequencies
 }
 \description{
 Generate visualizations for words from the input corpus
 }
 \examples{
 coRPysprofiling::corpus_viz("some text")
+coRPysprofiling::corpus_viz("some text")['word cloud']
+coRPysprofiling::corpus_viz("some text")['word freq bar chart']
+coRPysprofiling::corpus_viz("some text")['word length bar chart']
 }
