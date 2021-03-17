@@ -4,7 +4,12 @@
 \alias{corpora_compare}
 \title{Returns a numeric vector of the distance between the two corpora}
 \usage{
-corpora_compare(corpus1, corpus2, metric = "cosine_similarity")
+corpora_compare(
+  corpus1,
+  corpus2,
+  metric = "cosine_similarity",
+  model_name = "cb_ns_500_10"
+)
 }
 \arguments{
 \item{corpus1}{character vector}
@@ -12,13 +17,15 @@ corpora_compare(corpus1, corpus2, metric = "cosine_similarity")
 \item{corpus2}{character vector}
 
 \item{metric}{character vector, optional (default : "cosine_similarity")}
+
+\item{model_name}{character vector, optional (default : "cb_ns_500_10")}
 }
 \value{
-numeric vector
+double vector
 }
 \description{
 Returns a numeric vector of the distance between the two corpora
 }
 \examples{
-corpora_compare("kitten meows", "ice cream is yummy")
+coRPysprofiling::corpora_compare("kitten meows", "ice cream is yummy")
 }

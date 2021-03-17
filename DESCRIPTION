@@ -32,3 +32,13 @@ Suggests:
     testthat (>= 3.0.0),
     covr
 Config/testthat/edition: 3
+Imports: 
+    stopwords,
+    tokenizers,
+    word2vec,
+    stringr,
+    here,
+    stringi,
+    ggplot2,
+    ggwordcloud,
+    dplyr

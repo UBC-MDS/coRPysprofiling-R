@@ -5,14 +5,21 @@
 \title{Returns a tibble of distances from the reference document for each corpus in a vector of corpora.
 This tibble is sorted in the order of increasing distance.}
 \usage{
-corpora_best_match(refDoc, corpora, metric = "cosine_similarity")
+corpora_best_match(
+  refDoc,
+  corpora,
+  metric = "cosine_similarity",
+  model_name = "cb_ns_500_10"
+)
 }
 \arguments{
-\item{refDoc}{character vector}
+\item{refDoc}{character vector for reference document}
 
-\item{corpora}{character vector}
+\item{corpora}{character vector for corpora}
 
-\item{metric}{character vector, optional (default : "cosine_similarity")}
+\item{metric}{character vector for metric used to calculate distance, optional (default : "cosine_similarity")}
+
+\item{model_name}{character vector, optional (default : "cb_ns_500_10")}
 }
 \value{
 tibble
@@ -22,5 +29,5 @@ Returns a tibble of distances from the reference document for each corpus in a v
 This tibble is sorted in the order of increasing distance.
 }
 \examples{
-corpora_best_match(("kitten meows", c("ice cream is yummy", "cat meowed", "dog barks", "The Hitchhiker's Guide to the Galaxy has become an international multi-media phenomenon"))
+coRPysprofiling::corpora_best_match("kitten meows", c("ice cream is yummy", "cat meowed", "dog barks", "The Hitchhiker's Guide to the Galaxy has become an international multi-media phenomenon"))
 }
