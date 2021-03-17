@@ -112,7 +112,7 @@ corpus_analysis <- function(corpus) {
   token_avg_len <- mean(stringi::stri_length(token_clean))
 
   # get sentences from corpus
-  sents <- tokenize_sentences(corpus)[[1]]
+  sents <- tokenizers::tokenize_sentences(corpus)[[1]]
   sents_tokenize <- unlist(lapply(sents, clean_tokens), recursive = FALSE)
 
   # get statistics of sentences
