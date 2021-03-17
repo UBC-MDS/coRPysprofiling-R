@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/UBC-MDS/coRPysprofiling-R/workflows/R-CMD-check/badge.svg)](https://github.com/UBC-MDS/coRPysprofiling-R/actions) [![codecov](https://codecov.io/gh/UBC-MDS/corpysprofiling-R/branch/master/graph/badge.svg)](https://codecov.io/gh/UBC-MDS/coRPysprofiling-R)
 <!-- badges: end -->
 
 ## Summary
