@@ -9,7 +9,7 @@
 #' @examples
 #' coRPysprofiling::load_pretrained()
 #' coRPysprofiling::load_pretrained(model_name = "sg_hs_500_10")
-load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10") {
+load_pretrained <- function(dir = "inst/extdata", model_name = "cb_ns_500_10") {
   model_names <- c("cb_hs_500_10",
                    "cb_ns_500_10",
                    "sg_hs_500_10",
