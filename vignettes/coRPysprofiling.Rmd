@@ -2,7 +2,7 @@
 title: "Introduction to coRPysprofiling"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{coRPysprofiling}
+  %\VignetteIndexEntry{Introduction to coRPysprofiling}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
