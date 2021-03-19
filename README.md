@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/UBC-MDS/coRPysprofiling-R/workflows/R-CMD-check/badge.svg)](https://github.com/UBC-MDS/coRPysprofiling-R/actions)
+[![codecov](https://codecov.io/gh/UBC-MDS/corpysprofiling-R/branch/master/graph/badge.svg)](https://codecov.io/gh/UBC-MDS/coRPysprofiling-R)
 <!-- badges: end -->
 
 ## Summary
@@ -17,11 +19,9 @@ provide functions to compare multiple corpora with each other.
 
 ## Installation
 
-You can install the released version of coRPysprofiling from
-[CRAN](https://CRAN.R-project.org) with:
-
 ``` r
-install.packages("coRPysprofiling")
+# install.packages("devtools")
+devtools::install_github("UBC-MDS/coRPysprofiling-R")
 ```
 
 ## Features
@@ -57,11 +57,19 @@ approaches utilizing word embeddings.
 
 ## Dependencies
 
-  - TODO
+  - dplyr
+  - ggplot2
+  - ggwordcloud
+  - stringr
+  - stringi
+  - here
+  - stopwords
+  - tokenizers
+  - word2vec
 
 ## Usage
 
-  - TODO
+See vignette here: <https://ubc-mds.github.io/coRPysprofiling-R/>
 
 ## Documentation
 
@@ -90,7 +98,3 @@ current contributors in the contributors tab.
 #### Development Team
 
 Anita Li, Elanor Boyle-Stanley, Junghoo Kim, and Ivy Zhang
-
-#### Credits
-
-  - TODO
