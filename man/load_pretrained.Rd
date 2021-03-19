@@ -4,10 +4,10 @@
 \alias{load_pretrained}
 \title{Download and load pretrained word2vector models (https://github.com/maxoodf/word2vec#basic-usage)}
 \usage{
-load_pretrained(dir = "data", model_name = "cb_ns_500_10")
+load_pretrained(dir = "inst/extdata", model_name = "cb_ns_500_10")
 }
 \arguments{
-\item{dir}{character vector for name of dir where pretrained models will be downloaded, optional (default: "data")}
+\item{dir}{character vector for name of dir where pretrained models will be downloaded, optional (default: "inst/extdata")}
 
 \item{model_name}{character vector for name of pretrained model, optional (default: "cb_ns_500_10")}
 }

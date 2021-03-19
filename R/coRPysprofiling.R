@@ -1,6 +1,6 @@
 #' Download and load pretrained word2vector models (https://github.com/maxoodf/word2vec#basic-usage)
 #'
-#' @param dir character vector for name of dir where pretrained models will be downloaded, optional (default: "data")
+#' @param dir character vector for name of dir where pretrained models will be downloaded, optional (default: "inst/extdata")
 #' @param model_name character vector for name of pretrained model, optional (default: "cb_ns_500_10")
 #'
 #' @return word2vec model object
@@ -9,7 +9,7 @@
 #' @examples
 #' coRPysprofiling::load_pretrained()
 #' coRPysprofiling::load_pretrained(model_name = "sg_hs_500_10")
-load_pretrained <- function(dir = "data", model_name = "cb_ns_500_10") {
+load_pretrained <- function(dir = "inst/extdata", model_name = "cb_ns_500_10") {
   model_names <- c("cb_hs_500_10",
                    "cb_ns_500_10",
                    "sg_hs_500_10",
