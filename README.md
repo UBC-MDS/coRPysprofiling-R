@@ -69,25 +69,18 @@ approaches utilizing word embeddings.
 
 ## Usage
 
-See vignette here: <https://ubc-mds.github.io/coRPysprofiling-R/>
+See vignette here:
+<https://ubc-mds.github.io/coRPysprofiling-R/articles/coRPysprofiling.html>
 
 ## Documentation
 
 The help file can be viewed by:
 
 ``` r
-?corpus_analysis
-#> No documentation for 'corpus_analysis' in specified packages and libraries:
-#> you could try '??corpus_analysis'
-?corpus_viz
-#> No documentation for 'corpus_viz' in specified packages and libraries:
-#> you could try '??corpus_viz'
-?corpora_compare
-#> No documentation for 'corpora_compare' in specified packages and libraries:
-#> you could try '??corpora_compare'
-?corpora_best_match
-#> No documentation for 'corpora_best_match' in specified packages and libraries:
-#> you could try '??corpora_best_match'
+?coRPysprofiling::corpus_analysis
+?coRPysprofiling::corpus_viz
+?coRPysprofiling::corpora_compare
+?coRPysprofiling::corpora_best_match
 ```
 
 ## Contributors
