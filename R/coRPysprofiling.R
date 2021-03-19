@@ -172,14 +172,6 @@ df_30$length = stringr::str_length(df_30$word)
 
 # Step 2. To prepare data visualization
 ## To get a word cloud
-
-# Method 1
-# wordcloud::wordcloud(words = df$word, freq = df$Freq, min.freq = 1,
-#                 max.words=250, random.order=FALSE, rot.per=0.3,
-#                 colors=RColorBrewer::brewer.pal(5, "Paired"))
-
-
-# Method 2
 wc <- ggplot2::ggplot(
     df, ggplot2::aes(label = word, size = Freq, color = Freq,
                     angle =  sample(c(0, 90), size = nrow(df), prob = rep(c(3/5, 2/5)), replace = TRUE))) +
