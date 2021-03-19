@@ -58,7 +58,7 @@ To our knowledge, while `wordcloud` library generates wordcloud visualization fo
 
 ## Usage
 
-See vignette here: https://ubc-mds.github.io/coRPysprofiling-R/
+See vignette here: https://ubc-mds.github.io/coRPysprofiling-R/articles/coRPysprofiling.html
 
 
 ## Documentation
@@ -66,10 +66,10 @@ See vignette here: https://ubc-mds.github.io/coRPysprofiling-R/
 The help file can be viewed by:
 
 ```{r}
-?corpus_analysis
-?corpus_viz
-?corpora_compare
-?corpora_best_match
+?coRPysprofiling::corpus_analysis
+?coRPysprofiling::corpus_viz
+?coRPysprofiling::corpora_compare
+?coRPysprofiling::corpora_best_match
 ```
 
 ## Contributors
