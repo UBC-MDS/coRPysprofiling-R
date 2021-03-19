@@ -1,6 +1,6 @@
 #' Download and load pretrained word2vector models (https://github.com/maxoodf/word2vec#basic-usage)
 #'
-#' @param dir character vector for name of dir where pretrained models will be downloaded, optional (default: "data")
+#' @param dir character vector for name of dir where pretrained models will be downloaded, optional (default: "inst/extdata")
 #' @param model_name character vector for name of pretrained model, optional (default: "cb_ns_500_10")
 #'
 #' @return word2vec model object
