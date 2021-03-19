@@ -26,10 +26,9 @@ coRPysprofiling is an open-source library designed to bring exploratory data ana
 
 ## Installation
 
-You can install the released version of coRPysprofiling from [CRAN](https://CRAN.R-project.org) with:
-
 ``` r
-install.packages("coRPysprofiling")
+# install.packages("devtools")
+devtools::install_github("UBC-MDS/coRPysprofiling-R")
 ```
 
 ## Features
@@ -47,11 +46,20 @@ To our knowledge, while `wordcloud` library generates wordcloud visualization fo
 
 ## Dependencies
 
--   TODO
+-   dplyr
+-   ggplot2
+-   ggwordcloud
+-   stringr
+-   stringi
+-   here
+-   stopwords
+-   tokenizers
+-   word2vec
 
 ## Usage
 
--   TODO
+See vignette here: https://ubc-mds.github.io/coRPysprofiling-R/
+
 
 ## Documentation
 
@@ -71,7 +79,3 @@ We welcome and recognize all contributions. You can see a list of current contri
 #### Development Team
 
 Anita Li, Elanor Boyle-Stanley, Junghoo Kim, and Ivy Zhang
-
-#### Credits
-
--   TODO
