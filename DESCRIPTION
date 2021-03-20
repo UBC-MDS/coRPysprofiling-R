@@ -23,7 +23,7 @@ Description: coRPysprofiling is an open-source library designed to bring explora
     Functions in the package will be used to provide some elementary statistics and 
     visualizations for a single text corpus or provide functions to compare multiple 
     corpora with each other.
-License: MIT + file LICENSE
+License:  GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
